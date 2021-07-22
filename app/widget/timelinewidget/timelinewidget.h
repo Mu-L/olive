@@ -112,7 +112,7 @@ public:
 
   void RestoreSplitterState(const QByteArray& state);
 
-  static void ReplaceBlocksWithGaps(const QVector<Block *> &blocks, bool remove_from_graph, MultiUndoCommand *command);
+  static void ReplaceBlocksWithGaps(const QVector<Block *> &blocks, bool remove_from_graph, MultiUndoCommand *command, bool handle_transitions = true);
 
   /**
    * @brief Retrieve the QGraphicsItem at a particular scene position
@@ -138,6 +138,7 @@ public:
   Track* GetTrackFromReference(const Track::Reference& ref) const;
 
   void SetViewBeamCursor(const TimelineCoordinate& coord);
+  void SetViewTransitionOverlay(ClipBlock *out, ClipBlock *in);
 
   const QVector<TimelineViewGhostItem*>& GetGhostItems() const
   {
@@ -214,6 +215,9 @@ public:
     {
     }
 
+    virtual Project* GetRelevantProject() const override {return nullptr;}
+
+  protected:
     virtual void redo() override
     {
       timeline_->SetSelections(now_);
@@ -224,8 +228,6 @@ public:
       timeline_->SetSelections(old_);
     }
 
-    virtual Project* GetRelevantProject() const override {return nullptr;}
-
   private:
     TimelineWidget* timeline_;
     TimelineWidgetSelections old_;
@@ -234,9 +236,7 @@ public:
   };
 
 signals:
-  void BlocksSelected(const QVector<Block*>& selected_blocks);
-
-  void BlocksDeselected(const QVector<Block*>& deselected_blocks);
+  void BlockSelectionChanged(const QVector<Block*>& selected_blocks);
 
 protected:
   virtual void resizeEvent(QResizeEvent *event) override;
@@ -354,6 +354,8 @@ private slots:
   void TrackIndexChanged(int old, int now);
 
   void SetScrollZoomsByDefaultOnAllViews(bool e);
+
+  void SignalBlockSelectionChange();
 
 };
 

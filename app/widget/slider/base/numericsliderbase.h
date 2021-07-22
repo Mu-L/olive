@@ -42,6 +42,11 @@ public:
 
   bool IsDragging() const;
 
+  void SetIsEffectsSlider(bool e) {is_effects_slider_ = e;}
+
+  static bool IsEffectsSliderBeingDragged() { return effects_slider_is_being_dragged_; }
+  void SetEffectsSliderIsBeingDragged(bool e) { effects_slider_is_being_dragged_ = e; }
+
 protected:
   const QVariant& GetOffset() const
   {
@@ -86,6 +91,13 @@ private:
   double drag_multiplier_;
 
   bool setting_drag_value_;
+
+  bool is_effects_slider_;
+
+  /**
+   * @brief An effects slider somewhere is being dragged
+   */
+  static bool effects_slider_is_being_dragged_;
 
 private slots:
   void LabelPressed();

@@ -34,6 +34,7 @@
 #include "node/block/transition/transition.h"
 #include "pointer.h"
 #include "widget/nodeview/nodeviewundo.h"
+#include "widget/timelinewidget/undo/timelineundopointer.h"
 
 namespace olive {
 
@@ -590,7 +591,7 @@ void PointerTool::FinishDrag(TimelineViewMouseEvent *event)
         blocks_to_delete[i] = blocks_moving.at(i).block;
       }
 
-      parent()->ReplaceBlocksWithGaps(blocks_to_delete, false, command);
+      parent()->ReplaceBlocksWithGaps(blocks_to_delete, false, command, false);
     }
 
     if (inserting) {
